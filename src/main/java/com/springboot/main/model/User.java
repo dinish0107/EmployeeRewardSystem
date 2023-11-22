@@ -1,21 +1,38 @@
 package com.springboot.main.model;
 
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.springboot.main.enums.RoleType;
+
 @Entity
-@Table(name="user_details")
-public class User {
+@Table(name = "user_details")
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	@Column(nullable = false)
 	private String username;
+	@Column(nullable = false)
 	private String password;
-	private String role;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private RoleType role;
 
 	public int getId() {
 		return id;
@@ -41,12 +58,48 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
+	public RoleType getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(RoleType role) {
 		this.role = role;
 	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		//here we must convert user role in authority
+		SimpleGrantedAuthority sga = new SimpleGrantedAuthority(role.name());
+		Collection<GrantedAuthority> list = new ArrayList<>();
+		list.add(sga);
+		return list;
+	}
 
+	@Override
+	public boolean isAccountNonExpired() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + "]";
+	}
 }

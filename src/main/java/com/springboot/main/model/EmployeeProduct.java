@@ -1,6 +1,6 @@
 package com.springboot.main.model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name = "employee_product")
 public class EmployeeProduct {
@@ -18,14 +20,44 @@ public class EmployeeProduct {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
+	private String productname;
+	private double productprice;
+
+	public String getProductname() {
+		return productname;
+	}
+
+	public void setProductname(String productname) {
+		this.productname = productname;
+	}
+
+	
+	public double getProductprice() {
+		return productprice;
+	}
+
+	public void setProductprice(double productprice) {
+		this.productprice = productprice;
+	}
+
+	public Date getDateOfPurchase() {
+		return dateOfPurchase;
+	}
+
+	public void setDateOfPurchase(Date dateOfPurchase) {
+		this.dateOfPurchase = dateOfPurchase;
+	}
+
 	@ManyToOne
 	private Employee employee;
 
 	@ManyToOne
 	private Product product;
 
-	@Column(name = "date_of_purchase")
-	private LocalDate dateOfPurchase;
+	@CreationTimestamp
+
+	@Column(name = "date_of_purchase", nullable = false, updatable = false)
+	private Date dateOfPurchase;
 
 	public int getId() {
 		return id;
@@ -33,14 +65,6 @@ public class EmployeeProduct {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public LocalDate getDateOfPurchase() {
-		return dateOfPurchase;
-	}
-
-	public void setDateOfPurchase(LocalDate dateOfPurchase) {
-		this.dateOfPurchase = dateOfPurchase;
 	}
 
 	public Employee getEmployee() {

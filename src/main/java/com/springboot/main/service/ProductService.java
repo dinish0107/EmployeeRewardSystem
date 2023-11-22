@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springboot.main.exception.InvalidIdException;
+import com.springboot.main.model.EmployeeProduct;
 import com.springboot.main.model.Product;
 import com.springboot.main.repository.ProductRepository;
 
@@ -28,16 +29,19 @@ public class ProductService {
 
 	}
 
-	public Product getById(int id) throws InvalidIdException {
-		Optional<Product> optional = productRepository.findById(id);
+	public void deleteProduct(Product product) {
+
+		productRepository.delete(product);
+	}
+
+	public Product getById(int pid) throws InvalidIdException {
+		Optional<Product> optional = productRepository.findById(pid);
 		if (!optional.isPresent()) {
 			throw new InvalidIdException("Product ID Invalid");
 		}
 		return optional.get();
 	}
 
-	public void deleteProduct(Product product) {
-
-		productRepository.delete(product);
-	}
+	
+	
 }

@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.springboot.main.enums.RoleType;
 import com.springboot.main.exception.InvalidIdException;
 import com.springboot.main.model.Address;
-
+import com.springboot.main.model.Employee;
 import com.springboot.main.model.Manager;
 import com.springboot.main.model.User;
 import com.springboot.main.service.AddressService;
+import com.springboot.main.service.EmployeeService;
 import com.springboot.main.service.ManagerService;
 import com.springboot.main.service.UserService;
 
@@ -42,17 +43,24 @@ public class ManagerController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private EmployeeService employeeService;
 
+	// Adding manager details to database....
 	@PostMapping("/address/add")
 	public Manager insertManager(@RequestBody Manager manager) {
+		// save user info in db
 		User user = manager.getUser();
+		// i am encrypting the password
 		String passwordPlain = user.getPassword();
 
 		String encodedPassword = passwordEncoder.encode(passwordPlain);
 		user.setPassword(encodedPassword);
 
-		user.setRole("MANAGER");
+		user.setRole(RoleType.MANAGER);
 		user = userService.insert(user);
+		// attach the saved user(in step 1)
 		manager.setUser(user);
 
 		Address address = manager.getAddress();
@@ -64,6 +72,7 @@ public class ManagerController {
 		return managerService.insert(manager);
 	}
 
+	// fetching the all managers details from database.....
 
 	@GetMapping("/all")
 	public List<Manager> getAllManagers(
@@ -74,6 +83,7 @@ public class ManagerController {
 		return managerService.getAllManagers(pageable);
 	}
 
+	// fetching single manager details by using their id..
 	@GetMapping("/getone/{id}")
 	public ResponseEntity<?> getOne(@PathVariable("id") int id) {
 
@@ -86,14 +96,17 @@ public class ManagerController {
 
 	}
 
+//deleting single manager by using id...
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteManager(@PathVariable("id") int id) {
 
 		try {
+			// validate id
 
 			Manager manager = managerService.getById(id);
 
+			// delete
 			managerService.deleteManager(manager);
 			return ResponseEntity.ok().body("Manager deleted successfully");
 
@@ -102,20 +115,25 @@ public class ManagerController {
 		}
 	}
 
-@PutMapping("/update/address/{id}")
+	//if manager wants to update his address then it will works
+	
+	
+	@PutMapping("/update/address/{id}")
 	public ResponseEntity<?> updateManagerAddress(@PathVariable("id") int id, @RequestBody Manager newManager) {
 		try {
-
+			// validate id
 			Manager oldManager = managerService.getById(id);
 
 			Address newAddress = newManager.getAddress();
 
 			if (newAddress != null) {
+				// Update address fields
 				Address oldAddress = oldManager.getAddress();
 				oldAddress.setCity(newAddress.getCity());
 				oldAddress.setState(newAddress.getState());
 				oldAddress.setCountry(newAddress.getCountry());
 
+				// Save the updated manager
 				oldManager = managerService.insert(oldManager);
 
 				return ResponseEntity.ok().body(oldManager);
@@ -127,6 +145,5 @@ public class ManagerController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-
-
+	
 }

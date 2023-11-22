@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springboot.main.exception.InvalidIdException;
+import com.springboot.main.model.Employee;
+import com.springboot.main.model.Manager;
 import com.springboot.main.model.Transaction;
 import com.springboot.main.repository.TransactionRepository;
 
@@ -16,6 +18,9 @@ public class TransactionService {
 
 	@Autowired
 	private TransactionRepository transactionRepository;
+	
+
+
 
 	public Transaction insertTransaction(Transaction transaction) {
 
@@ -39,5 +44,12 @@ public class TransactionService {
 
 		transactionRepository.delete(transaction);
 	}
+
+	public List<Transaction> getTransactionsByEmployee(int eid) {
+		// TODO Auto-generated method stub
+		return transactionRepository.getTransactionsByEmployee(eid);
+	}
+
+
 
 }

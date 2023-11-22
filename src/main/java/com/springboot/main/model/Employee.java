@@ -31,8 +31,8 @@ public class Employee {
 	private Address address;
 	
 	@ManyToOne
-    @JoinColumn(name = "manager_id")
-    private Manager manager;
+    @JoinColumn(name = "hr_id")
+    private Hr hr;
 	
 
 	public int getId() {
@@ -107,13 +107,15 @@ public class Employee {
 		this.address = address;
 	}
 
-	public Manager getManager() {
-		return manager;
+	public Hr getHr() {
+		return hr;
 	}
 
-	public void setManager(Manager manager) {
-		this.manager = manager;
+	public void setHr(Hr hr) {
+		this.hr = hr;
 	}
+
+	
 	
 
 }

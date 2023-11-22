@@ -31,12 +31,16 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	// adding products in the database by hr...
 
 	@PostMapping("/add/{hid}")
 	public ResponseEntity<?> postProduct(@RequestBody Product product, @PathVariable("hid") int hid) {
+		/* Fetch Hr object from db using hid */
 		try {
 			Hr hr = hrService.getOne(hid);
+			/* Attach Hr to product */
 			product.setHr(hr);
+			/* Save the product in the DB */
 			product = productService.postProduct(product);
 			return ResponseEntity.ok().body(product);
 		} catch (InvalidIdException e) {
@@ -44,6 +48,7 @@ public class ProductController {
 		}
 	}
 
+	// fetching all products from database...
 	@GetMapping("/all")
 	public List<Product> getAllProducts(
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -53,6 +58,7 @@ public class ProductController {
 		return productService.getAllProducts(pageable);
 	}
 
+// fetching the single product by using id...
 	@GetMapping("/getone/{id}")
 	public ResponseEntity<?> getOne(@PathVariable("id") int id) {
 
@@ -65,13 +71,17 @@ public class ProductController {
 
 	}
 
+// delete the product by using id
+
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteHr(@PathVariable("id") int id) {
 
 		try {
+			// validate id
 
 			Product product = productService.getById(id);
 
+			// delete
 			productService.deleteProduct(product);
 			return ResponseEntity.ok().body("Product deleted successfully");
 

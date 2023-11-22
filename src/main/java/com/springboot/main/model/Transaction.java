@@ -1,15 +1,16 @@
 package com.springboot.main.model;
 
+import java.util.Date;
 
-
-import java.time.LocalDate;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Transaction {
@@ -21,12 +22,15 @@ public class Transaction {
 	private double oldPoints;
 	private double newPoints;
 	private String comments;
-	private LocalDate date;
+
+	@CreationTimestamp
+
+	@Column(name = "transaction_date", nullable = false, updatable = false)
+	private Date date;
 
 	@ManyToOne
 	private Employee employee;
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -67,13 +71,11 @@ public class Transaction {
 		this.comments = comments;
 	}
 
-	
-
-	public LocalDate getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
@@ -85,5 +87,4 @@ public class Transaction {
 		this.employee = employee;
 	}
 
-	
 }
